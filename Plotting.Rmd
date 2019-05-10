@@ -1,0 +1,93 @@
+---
+title: "plotting"
+author: "Matthew Chen"
+date: "April 12, 2019"
+output: html_document
+---
+
+```{r getting_data}
+getwd()
+
+moddf <- readRDS("predicting-ungauged-basins-data-prep-master/inputdata/moddf_inc.rds")
+row.names(moddf) <- 1:nrow(moddf)
+head(moddf)
+tail(moddf)
+class(moddf)
+str(moddf) # structure of the data
+length(moddf) # number of columns
+dim(moddf)
+nrow(moddf)
+ncol(moddf)
+colnames(moddf)
+
+# indexing
+moddf[1,2]
+moddf$CDEC_ID[1]
+```
+
+```{r indexing}
+ama_sub = moddf [moddf$CDEC_ID == "AMA", ]
+head(ama_sub)
+```
+
+```{r ppt_v_flow plot}
+for (i in 1: (length(unique(moddf$CDEC_ID)))){
+  h = unique(moddf$CDEC_ID)[i]
+  moddf_sub = moddf[moddf$CDEC_ID == h, ]
+  png(paste0('Output/Basins/Ppt_v_flow/Precipitation_v_flow_',h,'.png'), width = 12, height = 3.5, units = 'in', pointsize = 12, res= 1200)
+  plot(moddf_sub$PPT, moddf_sub$FLOW, main = h, xlab = 'Precipitation', ylab = 'Q')
+  dev.off()
+}
+
+```
+```{r temp_v_flow plot}
+for (i in 1:(length(unique(moddf$CDEC_ID)))){
+  h = unique(moddf$CDEC_ID)[i]
+  #gets index i from CDEC_ID
+  moddf_sub = moddf[moddf$CDEC_ID == h, ]
+  #slices dataframe with h corresponding to index i
+  png(paste0('Output/Basins/Temp_v_flow/Temp_v_flow', h, '.png'), width = 12, height=3.5, units = 'in', pointsize = 12, res= 1200) 
+  #sets up .png file with unique name
+  plot(moddf_sub$PPT, moddf_sub$FLOW, main = h, xlab = "Temp", ylab='Q') 
+  #makes plot 
+  dev.off()
+  #important!
+}
+``` 
+
+```{r season_v_flow plot}
+for (i in 1: (length(unique(moddf$CDEC_ID)))){
+  #subset dataframe
+  h = unique(moddf$CDEC_ID)[i]
+  moddf_sub = moddf[moddf$CDEC_ID == h,]
+  png(paste0('Output/Basins/Season_v_flow_',h,'.png'), width = 12, height = 3.5, units = 'in', pointsize = 12, res = 1200)
+  plot(moddf_sub$SEASON, moddf_sub$FLOW, main= h , xlab = "Season", ylab = "Q")
+  dev.off()
+  }
+
+```
+
+```{r Area_v_flow plot}
+
+png('Output/Basins/Area_v_flow/Area_v_flow.png', width = 12, height = 3.5, units = 'in', pointsize = 12, res = 1200)
+plot(moddf$AREASQM, moddf$FLOW, main="Area and Flow", xlab= "Area", ylab = "Q")
+dev.off()
+
+```
+```{r snow and flow plot}
+for (i in 1: (length(unique(moddf$CDEC_ID)))){
+  #subset dataframe
+  h = unique(moddf$CDEC_ID)[i]
+  moddf_sub = moddf[moddf$CDEC_ID == h,]
+  png(paste0('Output/Basins/Snow_v_flow/Season_v_flow_',h,'.png'), width = 12, height = 3.5, units = 'in', pointsize = 12, res = 1200)
+  smoothScatter(moddf_sub$SNOW, moddf_sub$FLOW, main= h , xlab = "Snow", ylab = "Q", xlim = c(0,500), ylim = c(0,1e6))
+  dev.off()
+  }
+
+```
+
+#look at git, install git 4.26
+# try plotting 2x2, explore plot(), google plotting categorical variables?, box plots, smooth scatter
+```
+
+
